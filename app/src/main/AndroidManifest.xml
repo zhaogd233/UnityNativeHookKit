@@ -21,6 +21,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <!-- Xposed 模块声明 -->
+        <meta-data android:name="xposedmodule" android:value="true" />
+        <meta-data android:name="xposeddescription" android:value="Load libnativehook.so and install ShadowHook in target app." />
+        <meta-data android:name="xposedminversion" android:value="93" />
     </application>
 
 </manifest>

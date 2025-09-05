@@ -12,7 +12,7 @@ public class MainActivity extends AppCompatActivity {
 
     // Used to load the 'nativehook' library on application startup.
     static {
-        System.loadLibrary("nativehook");
+      //  System.loadLibrary("nativehook");
     }
 
     private ActivityMainBinding binding;
@@ -26,15 +26,8 @@ public class MainActivity extends AppCompatActivity {
 
         // Example of a call to a native method
         TextView tv = binding.sampleText;
-        tv.setText(stringFromJNI());
 
-      int result =  ShadowHook.init(new ShadowHook.ConfigBuilder()
-                .setMode(ShadowHook.Mode.UNIQUE)
-                      .setDebuggable(true)
-                .build());
-        tv.setText(result+" ");
-
-        doHook();
+       // doHook();
     }
 
     /**

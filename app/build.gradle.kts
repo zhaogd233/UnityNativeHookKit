@@ -46,12 +46,17 @@ android {
 }
 
 dependencies {
-
+// Xposed API（compileOnly，运行时由框架提供）
+    compileOnly("de.robv.android.xposed:api:82")
+    //implementation("de.robv.android.xposed:api:82")
+    compileOnly("de.robv.android.xposed:api:82:sources")
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.constraintlayout)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+    // 给 IDE 用，不会影响运行
+    //implementation(files("libs/xposed-api-82.jar"))
     implementation("com.bytedance.android:shadowhook:2.0.0")
 }

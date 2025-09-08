@@ -24,11 +24,14 @@ project("nativehook")
 # System.loadLibrary() and pass the name of the library defined here;
 # for GameActivity/NativeActivity derived applications, the same library name must be
 # used in the AndroidManifest.xml file.
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 find_library(log-lib log)
 find_package(shadowhook REQUIRED CONFIG)
 add_library(${CMAKE_PROJECT_NAME} SHARED
         # List C/C++ source files with relative paths to this CMakeLists.txt.
-        native-lib.cpp)
+        native-lib.cpp
+        util.cpp
+        il2cpp-api.cpp)
 target_link_libraries(${CMAKE_PROJECT_NAME} shadowhook::shadowhook ${log-lib})
 
 

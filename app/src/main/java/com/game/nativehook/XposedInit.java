@@ -14,11 +14,12 @@ public class XposedInit implements IXposedHookLoadPackage {
     @Override
     public void handleLoadPackage(final XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
         // 只在目标包里执行
-        if (!lpparam.packageName.equals("com.DefaultCompany.TimeRewinderProject")) {
+      //  if (!lpparam.packageName.equals("com.DefaultCompany.TimeRewinderProject")) {
+        if (!lpparam.packageName.equals("com.pwrd.projectt.laohu")) {
             return;
         }
 
-        XposedBridge.log("MyXposedHook: Loaded 22 " + lpparam.packageName);
+        XposedBridge.log("MyXposedHook: Loaded" + lpparam.packageName);
 
 
         // 延迟几秒，等 Unity 初始化
@@ -31,7 +32,7 @@ public class XposedInit implements IXposedHookLoadPackage {
                     // 调用你的 JNI 方法
                     try {
                         System.loadLibrary("nativehook"); // 确保你的 so 已经加载
-                        doHookbyXposed(); // JNI 方法
+                        doHookDOAddUI(); // JNI 方法
                     } catch (Throwable t) {
                         XposedBridge.log("Native load error: " + t);
                     }
@@ -47,7 +48,7 @@ public class XposedInit implements IXposedHookLoadPackage {
         try (BufferedReader br = new BufferedReader(new FileReader("/proc/self/maps"))) {
             String line;
             while ((line = br.readLine()) != null) {
-                if (line.contains("libunity.so")) {
+                if (line.contains("libil2cpp.so")) {
                     return true;
                 }
             }
@@ -58,4 +59,5 @@ public class XposedInit implements IXposedHookLoadPackage {
     }
 
     public native void doHookbyXposed();
+    public native void doHookDOAddUI();
 }

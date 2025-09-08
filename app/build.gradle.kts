@@ -27,6 +27,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("debug")
         }
     }
     compileOptions {
@@ -47,8 +48,12 @@ android {
 
 dependencies {
 // Xposed API（compileOnly，运行时由框架提供）
-    compileOnly("de.robv.android.xposed:api:82")
-    //implementation("de.robv.android.xposed:api:82")
+    //仅用于编译使用，不会打包到apk ,使用默认xposed 框架里面的api,但是会造成无法代码提示
+  //  compileOnly("de.robv.android.xposed:api:82")
+    // 可以代码提示，但是编译会带进apk, 造成无法使用xposed框架，编写代码的时候使用此，
+    debugImplementation("de.robv.android.xposed:api:82")
+    // Release 构建下：只在编译期用，不会进 APK
+    releaseCompileOnly("de.robv.android.xposed:api:82")
     compileOnly("de.robv.android.xposed:api:82:sources")
     implementation(libs.appcompat)
     implementation(libs.material)

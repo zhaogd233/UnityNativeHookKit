@@ -1,26 +1,21 @@
 #pragma once
-#include "il2cpp-api.h"   // il2cpp 提供的头文件，确保能访问 Il2CppString
 #include <string>
+#include "il2cpp-api.h"   // 你之前定义的 DO_API 等宏
 
-struct Il2CppString {
-    void* klass;
-    void* monitor;
-    int32_t length;
-    uint16_t chars[0]; // UTF-16
-};
+// 工具函数：处理 Il2CppString 和 C++ string 互转
+namespace Il2CppUtils
+{
+    // Il2CppString* → std::string (UTF-8)
+    std::string Utf16ToUtf8(Il2CppString* str);
 
-/// <summary>
-/// 把 Il2CppString* 转换成 std::string (UTF8)
-/// 内部调用 Unity 提供的 il2cpp_string_to_utf8
-/// </summary>
-std::string Il2CppStringToUtf8(Il2CppString* str);
+   // Il2CppString* → const char* (UTF-8)，注意生命周期
+    const char* Utf16ToCString(Il2CppString* str);
 
-/// <summary>
-/// 释放由 Il2CppStringToUtf8Raw 分配的内存
-/// </summary>
-void FreeIl2CppStringUtf8(char* utf8Str);
+    // std::string (UTF-8) → Il2CppString*
+    Il2CppString* NewString(const std::string& str);
 
-/// <summary>
-/// 获取 UTF8 原始指针（malloc 分配，需要手动调用 FreeIl2CppStringUtf8 释放）
-/// </summary>
-char* Il2CppStringToUtf8Raw(Il2CppString* str);
+    // const char* (UTF-8) → Il2CppString*
+    Il2CppString* NewString(const char* str);
+
+    std::string ToString(Il2CppString* str);
+}

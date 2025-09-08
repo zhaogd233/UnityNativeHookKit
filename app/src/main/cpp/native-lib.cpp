@@ -112,7 +112,7 @@ typedef void* (*DoAddUI_func_t)(void* thiz, void* uiData, void* curAssetRef);
 void* DoAddUI_proxy(void* thiz, void* uiData, void* curAssetRef) {
     LOG(">> DoAddUI called!");
 
-/*    // 1. 获取 class
+    // 1. 获取 class
     Il2CppClass* klass = (Il2CppClass*)Il2CppApi::il2cpp_object_get_class_ptr(uiData);
 
     // 2. 获取 field
@@ -123,11 +123,28 @@ void* DoAddUI_proxy(void* thiz, void* uiData, void* curAssetRef) {
     Il2CppApi::il2cpp_field_get_value_ptr(uiData, field, &strObj);
 
     // 4. 转换成 char*
-    if (strObj) {
-        std::string utf8 = Il2CppStringToUtf8(strObj); // 需要写个 helper
-        LOG("UIPathData.path = %s", utf8);
-        FreeIl2CppStringUtf8((char*)utf8);
-    }*/
+    if (strObj != nullptr)
+    {
+        Il2CppString* il2cppStr = reinterpret_cast<Il2CppString*>(strObj);
+
+        // 用我们 utils 里的函数来转
+        std::string cppStr = Il2CppUtils::ToString(il2cppStr);
+
+        // 打印出来看看
+        LOGW("Field string: %s\n", cppStr.c_str());
+
+        //test motify
+        if(cppStr == "Notice/NoticeRoot")
+        {
+            Il2CppApi::il2cpp_field_set_value_ptr(uiData, field, Il2CppUtils::NewString("Login/NamePlayer"));
+            LOGW("替换成功");
+        }
+    }
+    else
+    {
+        LOGE("Field string is null.\n");
+    }
+
 
     // 调用原始函数
     void* result = ((DoAddUI_func_t)orig_DoAddUI)(thiz, uiData, curAssetRef);

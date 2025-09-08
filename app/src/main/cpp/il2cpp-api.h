@@ -11,6 +11,8 @@ struct Il2CppDomain;
 struct Il2CppAssembly;
 struct Il2CppClass;
 struct Il2CppImage;
+typedef uint16_t Il2CppChar;
+struct Il2CppString;
 
 // MethodInfo 结构（简化版）
 struct MethodInfo {
@@ -30,7 +32,17 @@ typedef const MethodInfo* (*il2cpp_class_get_method_from_name_t)(Il2CppClass* kl
 typedef void* (*il2cpp_object_get_class_t)(void* obj);
 typedef void* (*il2cpp_class_get_field_from_name_t)(Il2CppClass* klass, const char* name);
 typedef void (*il2cpp_field_get_value_t)(void* obj, void* field, void* value);
+typedef void (*il2cpp_field_set_value_t)(void* obj, void* field, void* value);
 
+//string
+typedef int32_t   (*il2cpp_string_length_t)(Il2CppString* str);
+typedef Il2CppChar* (*il2cpp_string_chars_t)(Il2CppString* str);
+typedef Il2CppString* (*il2cpp_string_new_t)(const char* str);
+typedef Il2CppString* (*il2cpp_string_new_len_t)(const char* str, uint32_t length);
+typedef Il2CppString* (*il2cpp_string_new_utf16_t)(const Il2CppChar* text, int32_t len);
+typedef Il2CppString* (*il2cpp_string_new_wrapper_t)(const char* str);
+typedef Il2CppString* (*il2cpp_string_intern_t)(Il2CppString* str);
+typedef Il2CppString* (*il2cpp_string_is_interned_t)(Il2CppString* str);
 
 // ---------------- 延迟加载结构体 ----------------
 struct Il2CppApi {
@@ -43,6 +55,17 @@ struct Il2CppApi {
     static il2cpp_object_get_class_t il2cpp_object_get_class_ptr;
     static il2cpp_class_get_field_from_name_t il2cpp_class_get_field_from_name_ptr;
     static il2cpp_field_get_value_t il2cpp_field_get_value_ptr;
+    static il2cpp_field_get_value_t il2cpp_field_set_value_ptr;
+
+    // string
+    static il2cpp_string_length_t il2cpp_string_length;
+    static il2cpp_string_chars_t il2cpp_string_chars;
+    static il2cpp_string_new_t il2cpp_string_new;
+    static il2cpp_string_new_len_t il2cpp_string_new_len;
+    static il2cpp_string_new_utf16_t il2cpp_string_new_utf16;
+    static il2cpp_string_new_wrapper_t il2cpp_string_new_wrapper;
+    static il2cpp_string_intern_t il2cpp_string_intern;
+    static il2cpp_string_is_interned_t il2cpp_string_is_interned;
 
     static bool Init();
 };

@@ -1,40 +1,57 @@
-//
-// Created by Administrator on 2025/9/8.
-//
-
 #include "util.h"
-#include <cstring>
-#include <cstdlib>
+#include <codecvt>
+#include <locale>
 
-// Unity 提供的 C API (在 libil2cpp.so 内实现)
-extern "C"
+namespace Il2CppUtils
 {
-char* il2cpp_string_to_utf8(Il2CppString* str);
-void il2cpp_free(void* ptr);
-}
-
-std::string Il2CppStringToUtf8(Il2CppString* str)
-{
-    if (!str) return std::string();
-
-    char* utf8 = il2cpp_string_to_utf8(str);
-    if (!utf8) return std::string();
-
-    std::string result(utf8);
-    il2cpp_free(utf8);  // 必须释放掉 Unity 内部的内存
-    return result;
-}
-
-char* Il2CppStringToUtf8Raw(Il2CppString* str)
-{
-    if (!str) return nullptr;
-    return il2cpp_string_to_utf8(str); // 需要手动 FreeIl2CppStringUtf8
-}
-
-void FreeIl2CppStringUtf8(char* utf8Str)
-{
-    if (utf8Str)
+   std::string Utf16ToUtf8(Il2CppString* str)
     {
-        il2cpp_free(utf8Str);
+        if (!str) return "";
+
+        int32_t length = Il2CppApi::il2cpp_string_length(str);
+        const Il2CppChar* chars = Il2CppApi::il2cpp_string_chars(str);
+
+        if (!chars || length <= 0) return "";
+
+        // UTF-16 → UTF-8
+        std::u16string u16str(chars, chars + length);
+        std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t> convert;
+        return convert.to_bytes(u16str);
+    }
+
+   const char* Utf16ToCString(Il2CppString* str)
+    {
+        static thread_local std::string buffer; // 避免返回悬空指针
+        buffer = Utf16ToUtf8(str);
+        return buffer.c_str();
+    }
+
+    Il2CppString* NewString(const std::string& str)
+    {
+        return Il2CppApi::il2cpp_string_new(str.c_str());
+    }
+
+    Il2CppString* NewString(const char* str)
+    {
+        return Il2CppApi::il2cpp_string_new(str);
+    }
+    // 把 Il2CppString 转成 std::string
+     std::string ToString(Il2CppString* str)
+    {
+        if (str == nullptr)
+            return std::string();
+
+        const Il2CppChar* chars = Il2CppApi::il2cpp_string_chars(str);
+        int32_t len = Il2CppApi::il2cpp_string_length(str);
+
+        std::string result;
+        result.reserve(len);
+
+        for (int i = 0; i < len; ++i)
+        {
+            // 假设都是 ASCII 范围，直接低字节转
+            result.push_back(static_cast<char>(chars[i] & 0xFF));
+        }
+        return result;
     }
 }

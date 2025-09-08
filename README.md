@@ -16,6 +16,7 @@
 * 支持 **Java 层暴露接口**（`doHook()` / `doUnHook()`）
 * 支持 **C# 层 DllImport 调用**（`doHookNative()` / `doUnHookNative()`）
 * 支持 **Xposed 框架加载 so 并触发 Hook**
+* 支持 **LibIL2cpp 函数的注入，修改，执行。
 
 ---
 
@@ -150,6 +151,8 @@ dependencies {
 * **避免死循环**：在 Hook 回调中打印 log 时，不要调用被 Hook 的 `Debug.Log`，建议用 `__android_log_print`。
 * **符号查找问题**：某些情况下（如 Xposed 环境），符号可能未加载，需要延迟调用 `CheckHookFunc`。
 * **多方式共存**：Java/C#/Xposed 可独立使用，互不影响。
+* **xposed框架问题**：xposed相关模块必须使用xposed 自身的，项目本身不能编译进去。因此使用的compileOnly，但这样idea 就无法使用相关api，因此采用的是
+release 的时候compileOnly，debug的时候impelmentation .因此需要release 打包方式运行到真机测试。可设置
 
 ---
 
